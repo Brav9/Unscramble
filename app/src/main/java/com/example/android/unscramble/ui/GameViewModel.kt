@@ -2,11 +2,13 @@ package com.example.android.unscramble.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.android.unscramble.ui.game.MAX_NO_OF_WORDS
 import com.example.android.unscramble.ui.game.allWordsList
 
 class GameViewModel : ViewModel() {
 
     private var score = 0
+    private var currentWordCount = 0
     private var _currentWordCount = 0
     private var _currentScrambledWord = "test"
     private var wordList: MutableList<String> = mutableListOf()
@@ -32,11 +34,19 @@ class GameViewModel : ViewModel() {
 
     init {
         Log.d("GameFragment", "GameViewModel created!")
+        getNextWord()
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.d("GameFragment", "GameViewModel destroyed!")
+    }
+
+    fun nextWord(): Boolean {
+        return if (currentWordCount < MAX_NO_OF_WORDS) {
+            getNextWord()
+            true
+        } else false
     }
 
 
