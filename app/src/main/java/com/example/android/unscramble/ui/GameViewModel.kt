@@ -1,8 +1,10 @@
 package com.example.android.unscramble.ui
 
+import android.provider.UserDictionary
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.android.unscramble.ui.game.MAX_NO_OF_WORDS
+import com.example.android.unscramble.ui.game.SCORE_INCREASE
 import com.example.android.unscramble.ui.game.allWordsList
 
 class GameViewModel : ViewModel() {
@@ -53,5 +55,15 @@ class GameViewModel : ViewModel() {
         } else false
     }
 
+    private fun increaseScore() {
+        _score += SCORE_INCREASE
+    }
 
+    fun isUserWordCorrect(playerWord: String): Boolean {
+        if (playerWord.equals(currentWord, true)) {
+            increaseScore()
+            return true
+        }
+        return false
+    }
 }
