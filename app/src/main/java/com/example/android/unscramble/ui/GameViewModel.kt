@@ -2,13 +2,14 @@ package com.example.android.unscramble.ui
 
 import android.provider.UserDictionary
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.unscramble.ui.game.MAX_NO_OF_WORDS
 import com.example.android.unscramble.ui.game.SCORE_INCREASE
 import com.example.android.unscramble.ui.game.allWordsList
 
 class GameViewModel : ViewModel() {
-
     private var _score = 0
     val score: Int
         get() = _score
@@ -17,17 +18,23 @@ class GameViewModel : ViewModel() {
     val currentWordCount: Int
         get() = _currentWordCount
 
-    private var _currentScrambledWord = "test"
+    private val _currentScrambledWord = MutableLiveData<String>()
     private var wordList: MutableList<String> = mutableListOf()
     private lateinit var currentWord: String
 
-    val currentScrambledWord: String
+    val currentScrambledWord: LiveData<String>
         get() = _currentScrambledWord
+
+    init {
+        Log.d("GameFragment", "GameViewModel created!")
+        getNextWord()
+    }
 
     private fun getNextWord() {
         currentWord = allWordsList.random()
         val tempWord = currentWord.toCharArray()
         tempWord.shuffle()
+        
         while (String(tempWord).equals(currentWord, false)) {
             tempWord.shuffle()
         }
@@ -38,11 +45,6 @@ class GameViewModel : ViewModel() {
             ++_currentWordCount
             wordList.add(currentWord)
         }
-    }
-
-    init {
-        Log.d("GameFragment", "GameViewModel created!")
-        getNextWord()
     }
 
     override fun onCleared() {
