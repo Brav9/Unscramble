@@ -11,11 +11,11 @@ import com.example.android.unscramble.ui.game.allWordsList
 
 class GameViewModel : ViewModel() {
     private val _score = MutableLiveData(0)
-    val score: Int
+    val score: LiveData<Int>
         get() = _score
 
     private val _currentWordCount = MutableLiveData(0)
-    val currentWordCount: Int
+    val currentWordCount: LiveData<Int>
         get() = _currentWordCount
 
     private val _currentScrambledWord = MutableLiveData<String>()
@@ -53,7 +53,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun nextWord(): Boolean {
-        return if (_currentWordCount.value < MAX_NO_OF_WORDS) {
+        return if (_currentWordCount.value!! < MAX_NO_OF_WORDS) {
             getNextWord()
             true
         } else false

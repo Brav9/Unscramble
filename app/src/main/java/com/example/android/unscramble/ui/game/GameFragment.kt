@@ -58,18 +58,26 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.currentScrambledWord.observe(viewLifecycleOwner,
-            { newWord ->
-                binding.textViewUnscrambledWord.text = newWord
-            })
+        viewModel.currentScrambledWord.observe(
+            viewLifecycleOwner
+        ) { newWord ->
+            binding.textViewUnscrambledWord.text = newWord
+        }
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
         // Update the UI
-        binding.score.text = getString(R.string.score, 0)
-        binding.wordCount.text = getString(
-            R.string.word_count, 0, MAX_NO_OF_WORDS
-        )
+        viewModel.score.observe(
+            viewLifecycleOwner
+        ) { newScore ->
+            binding.score.text = getString(R.string.score, newScore)
+        }
+        viewModel.currentWordCount.observe(
+            viewLifecycleOwner
+        ) { newWordCount ->
+            binding.wordCount.text =
+                getString(R.string.word_count, newWordCount, MAX_NO_OF_WORDS)
+        }
     }
 
     /*
@@ -81,7 +89,7 @@ class GameFragment : Fragment() {
 
         if (viewModel.isUserWordCorrect(playerWord)) {
             setErrorTextField(false)
-            if (viewModel.nextWord()) {
+            if (!viewModel.nextWord()) {
                 showFinalScoreDialog()
             }
         } else {
@@ -151,6 +159,7 @@ class GameFragment : Fragment() {
             .setCancelable(false)
             .setNegativeButton(getString(R.string.exit)) { _, _ ->
                 exitGame()
+
             }
             .setPositiveButton(getString(R.string.play_again)) { _, _ ->
                 restartGame()
