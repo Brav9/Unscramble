@@ -64,11 +64,6 @@ class GameFragment : Fragment() {
         binding.maxNoOfWords = MAX_NO_OF_WORDS
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.currentScrambledWord.observe(
-            viewLifecycleOwner
-        ) { newWord ->
-            binding.textViewUnscrambledWord.text = newWord
-        }
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
